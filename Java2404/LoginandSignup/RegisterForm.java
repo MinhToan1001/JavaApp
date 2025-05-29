@@ -50,17 +50,19 @@ public class RegisterForm extends JFrame {
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new GridBagLayout());
         formPanel.setOpaque(false);
+
+        // Khởi tạo và cấu hình GridBagConstraints
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(10, 10, 10, 10); // Khoảng cách giữa các thành phần
+        gbc.fill = GridBagConstraints.HORIZONTAL; // Điền ngang
 
         // Tiêu đề "Đăng ký"
         JLabel titleLabel = new JLabel("Đăng ký", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         titleLabel.setForeground(new Color(255, 51, 51));
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
+        gbc.gridx = 0; // Cột bắt đầu
+        gbc.gridy = 0; // Hàng bắt đầu
+        gbc.gridwidth = 2; // Chiếm 2 cột
         formPanel.add(titleLabel, gbc);
 
         // Nút mạng xã hội
@@ -97,7 +99,7 @@ public class RegisterForm extends JFrame {
 
         // Văn bản "hoặc sử dụng email để đăng ký:"
         JLabel orLabel = new JLabel("hoặc sử dụng email để đăng ký:", SwingConstants.CENTER);
-        orLabel.setForeground(Color.GRAY); // Sửa dòng này
+        orLabel.setForeground(Color.GRAY);
         gbc.gridy = 2;
         formPanel.add(orLabel, gbc);
 
@@ -105,7 +107,7 @@ public class RegisterForm extends JFrame {
         nameField = new JTextField("Họ và tên");
         nameField.setForeground(Color.GRAY);
         nameField.setPreferredSize(new Dimension(300, 40));
-        nameField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1, true)); // Bo góc
+        nameField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1, true));
         nameField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -130,7 +132,7 @@ public class RegisterForm extends JFrame {
         emailField = new JTextField("Email");
         emailField.setForeground(Color.GRAY);
         emailField.setPreferredSize(new Dimension(300, 40));
-        emailField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1, true)); // Bo góc
+        emailField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1, true));
         emailField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -154,13 +156,13 @@ public class RegisterForm extends JFrame {
         // Trường Mật khẩu với placeholder và nút con mắt
         JPanel passwordContainer = new JPanel(new BorderLayout(0, 0));
         passwordContainer.setOpaque(false);
-        passwordContainer.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1, true)); // Bo góc cho toàn bộ thanh
-        passwordContainer.setPreferredSize(new Dimension(300, 40)); // Đảm bảo cùng kích thước với emailField
+        passwordContainer.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1, true));
+        passwordContainer.setPreferredSize(new Dimension(300, 40));
 
         passwordField = new JPasswordField("Mật khẩu");
-        passwordField.setEchoChar((char) 0); // Hiển thị placeholder ban đầu
+        passwordField.setEchoChar((char) 0);
         passwordField.setForeground(Color.GRAY);
-        passwordField.setBorder(null); // Loại bỏ viền riêng của passwordField
+        passwordField.setBorder(null);
         passwordField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -184,11 +186,11 @@ public class RegisterForm extends JFrame {
         togglePasswordButton = new JButton("👁️");
         togglePasswordButton.setPreferredSize(new Dimension(40, 40));
         togglePasswordButton.setFocusPainted(false);
-        togglePasswordButton.setOpaque(true); // Bật nền
-        togglePasswordButton.setBackground(Color.WHITE); // Đặt nền trắng để đồng bộ
+        togglePasswordButton.setOpaque(true);
+        togglePasswordButton.setBackground(Color.WHITE);
         togglePasswordButton.setBorderPainted(false);
         togglePasswordButton.setBorder(null);
-        togglePasswordButton.setContentAreaFilled(true); // Đảm bảo hiển thị nền
+        togglePasswordButton.setContentAreaFilled(true);
         togglePasswordButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -207,10 +209,10 @@ public class RegisterForm extends JFrame {
 
         // Trường Xác nhận mật khẩu với placeholder
         confirmPasswordField = new JPasswordField("Nhập lại mật khẩu");
-        confirmPasswordField.setEchoChar((char) 0); // Hiển thị placeholder ban đầu
+        confirmPasswordField.setEchoChar((char) 0);
         confirmPasswordField.setForeground(Color.GRAY);
         confirmPasswordField.setPreferredSize(new Dimension(300, 40));
-        confirmPasswordField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1, true)); // Bo góc
+        confirmPasswordField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1, true));
         confirmPasswordField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -249,7 +251,7 @@ public class RegisterForm extends JFrame {
         signUpButton.setForeground(Color.WHITE);
         signUpButton.setPreferredSize(new Dimension(150, 40));
         signUpButton.setFocusPainted(false);
-        signUpButton.setBorder(BorderFactory.createLineBorder(new Color(255, 51, 51), 2, true)); // Bo góc
+        signUpButton.setBorder(BorderFactory.createLineBorder(new Color(255, 51, 51), 2, true));
         signUpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -257,15 +259,48 @@ public class RegisterForm extends JFrame {
                 String email = emailField.getText();
                 String password = new String(passwordField.getPassword());
                 String confirmPassword = new String(confirmPasswordField.getPassword());
+
+                // Kiểm tra mật khẩu có khớp không
                 if (!password.equals(confirmPassword)) {
                     JOptionPane.showMessageDialog(RegisterForm.this, "Mật khẩu không khớp!");
                     return;
                 }
-                if (agreeCheckBox.isSelected()) {
-                    registerUser(name, email, password);
-                } else {
+
+                // Kiểm tra điều khoản
+                if (!agreeCheckBox.isSelected()) {
                     JOptionPane.showMessageDialog(RegisterForm.this, "Vui lòng đồng ý với điều khoản!");
+                    return;
                 }
+
+                // Kiểm tra độ dài dữ liệu
+                if (name.length() > 255) {
+                    JOptionPane.showMessageDialog(RegisterForm.this, "Tên quá dài (tối đa 255 ký tự)!");
+                    return;
+                }
+                if (email.length() > 255) {
+                    JOptionPane.showMessageDialog(RegisterForm.this, "Email quá dài (tối đa 255 ký tự)!");
+                    return;
+                }
+                if (password.length() > 255) {
+                    JOptionPane.showMessageDialog(RegisterForm.this, "Mật khẩu quá dài (tối đa 255 ký tự)!");
+                    return;
+                }
+
+                // Kiểm tra xem các trường có rỗng không
+                if (name.isEmpty() || name.equals("Họ và tên")) {
+                    JOptionPane.showMessageDialog(RegisterForm.this, "Vui lòng nhập họ và tên!");
+                    return;
+                }
+                if (email.isEmpty() || email.equals("Email")) {
+                    JOptionPane.showMessageDialog(RegisterForm.this, "Vui lòng nhập email!");
+                    return;
+                }
+                if (password.isEmpty() || password.equals("Mật khẩu")) {
+                    JOptionPane.showMessageDialog(RegisterForm.this, "Vui lòng nhập mật khẩu!");
+                    return;
+                }
+
+                registerUser(name, email, password);
             }
         });
 
@@ -274,7 +309,7 @@ public class RegisterForm extends JFrame {
         signInButton.setForeground(Color.WHITE);
         signInButton.setPreferredSize(new Dimension(150, 40));
         signInButton.setFocusPainted(false);
-        signInButton.setBorder(BorderFactory.createLineBorder(new Color(255, 51, 51), 2, true)); // Bo góc
+        signInButton.setBorder(BorderFactory.createLineBorder(new Color(255, 51, 51), 2, true));
         signInButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -313,15 +348,19 @@ public class RegisterForm extends JFrame {
         try (Connection conn = TestConnection.getConnection()) {
             String sql = "INSERT INTO users (username, password) VALUES (?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, email);
+            stmt.setString(1, name); // Sử dụng name làm username
             stmt.setString(2, password);
-            stmt.executeUpdate();
-            JOptionPane.showMessageDialog(this, "Đăng ký thành công!");
-            loginForm.setVisible(true);
-            this.dispose();
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(this, "Đăng ký thành công!");
+                loginForm.setVisible(true);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Đăng ký thất bại! Không có dữ liệu nào được thêm.");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Đăng ký thất bại!");
+            JOptionPane.showMessageDialog(this, "Đăng ký thất bại! Chi tiết lỗi: " + e.getMessage());
         }
     }
 }
