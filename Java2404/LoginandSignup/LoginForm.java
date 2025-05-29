@@ -8,10 +8,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import Java2404.User.ForgotPassword;
+import Java2404.User.UserInterface;
+import Java2404.Admin.AdminInterface;
+
 public class LoginForm extends JFrame {
     private JTextField emailField;
     private JPasswordField passwordField;
     private JButton togglePasswordButton;
+    private JPanel successPanel;
+    private JLabel successIconLabel;
+    private JLabel successTextLabel;
 
     public LoginForm() {
         setTitle("Đăng nhập");
@@ -37,6 +44,33 @@ public class LoginForm extends JFrame {
             }
         };
         mainPanel.setLayout(new BorderLayout());
+
+        // Tạo panel chứa thông báo thành công (ban đầu ẩn)
+        successPanel = new JPanel();
+        successPanel.setBackground(new Color(255, 255, 255, 255));
+        successPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        successPanel.setVisible(false);
+        successPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+
+        // Label cho hình ảnh dấu tích
+        successIconLabel = new JLabel();
+        try {
+            ImageIcon checkIcon = new ImageIcon("Java2404/image/success.png");
+            Image img = checkIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH);
+            successIconLabel.setIcon(new ImageIcon(img));
+        } catch (Exception e) {
+            successIconLabel.setText("✔");
+        }
+
+        // Label cho văn bản
+        successTextLabel = new JLabel("Đăng nhập thành công!");
+        successTextLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        successTextLabel.setForeground(Color.BLACK);
+
+        successPanel.add(successIconLabel);
+        successPanel.add(successTextLabel);
+
+        mainPanel.add(successPanel, BorderLayout.NORTH);
 
         // Panel chia đôi
         JPanel contentPanel = new JPanel(new GridLayout(1, 2));
@@ -101,7 +135,7 @@ public class LoginForm extends JFrame {
         emailField = new JTextField("Email");
         emailField.setForeground(Color.GRAY);
         emailField.setPreferredSize(new Dimension(300, 40));
-        emailField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1, true)); // Bo góc
+        emailField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1, true));
         emailField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -125,13 +159,13 @@ public class LoginForm extends JFrame {
         // Trường Mật khẩu với placeholder và nút con mắt
         JPanel passwordContainer = new JPanel(new BorderLayout(0, 0));
         passwordContainer.setOpaque(false);
-        passwordContainer.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1, true)); // Bo góc cho toàn bộ thanh
-        passwordContainer.setPreferredSize(new Dimension(300, 40)); // Đảm bảo cùng kích thước với emailField
+        passwordContainer.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1, true));
+        passwordContainer.setPreferredSize(new Dimension(300, 40));
 
         passwordField = new JPasswordField("Mật khẩu");
-        passwordField.setEchoChar((char) 0); // Hiển thị placeholder ban đầu
+        passwordField.setEchoChar((char) 0);
         passwordField.setForeground(Color.GRAY);
-        passwordField.setBorder(null); // Loại bỏ viền riêng của passwordField
+        passwordField.setBorder(null);
         passwordField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -155,11 +189,11 @@ public class LoginForm extends JFrame {
         togglePasswordButton = new JButton("👁️");
         togglePasswordButton.setPreferredSize(new Dimension(40, 40));
         togglePasswordButton.setFocusPainted(false);
-        togglePasswordButton.setOpaque(true); // Bật nền
-        togglePasswordButton.setBackground(Color.WHITE); // Đặt nền trắng để đồng bộ
+        togglePasswordButton.setOpaque(true);
+        togglePasswordButton.setBackground(Color.WHITE);
         togglePasswordButton.setBorderPainted(false);
         togglePasswordButton.setBorder(null);
-        togglePasswordButton.setContentAreaFilled(true); // Đảm bảo hiển thị nền
+        togglePasswordButton.setContentAreaFilled(true);
         togglePasswordButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -192,14 +226,14 @@ public class LoginForm extends JFrame {
         signInButton.setForeground(Color.WHITE);
         signInButton.setPreferredSize(new Dimension(150, 40));
         signInButton.setFocusPainted(false);
-        signInButton.setBorder(BorderFactory.createLineBorder(new Color(255, 51, 51), 2, true)); // Bo góc
+        signInButton.setBorder(BorderFactory.createLineBorder(new Color(255, 51, 51), 2, true));
 
         JButton signUpButton = new JButton("Đăng ký");
         signUpButton.setBackground(new Color(255, 51, 51));
         signUpButton.setForeground(Color.WHITE);
         signUpButton.setPreferredSize(new Dimension(150, 40));
-        signUpButton.setFocusPainted(false);
-        signUpButton.setBorder(BorderFactory.createLineBorder(new Color(255, 51, 51), 2, true)); // Bo góc
+        signInButton.setFocusPainted(false);
+        signUpButton.setBorder(BorderFactory.createLineBorder(new Color(255, 51, 51), 2, true));
         signUpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -212,10 +246,20 @@ public class LoginForm extends JFrame {
         gbc.gridy = 6;
         formPanel.add(buttonPanel, gbc);
 
-        // Liên kết "Quên mật khẩu?"
+        // Trong class LoginForm, tìm đoạn code của forgotPasswordLabel và sửa lại
         JLabel forgotPasswordLabel = new JLabel("Quên mật khẩu?", SwingConstants.CENTER);
         forgotPasswordLabel.setForeground(Color.GRAY);
         forgotPasswordLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        forgotPasswordLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Ẩn form đăng nhập hiện tại
+                LoginForm.this.setVisible(false);
+                // Mở form ForgotPassword
+                ForgotPassword forgotPasswordForm = new ForgotPassword(LoginForm.this);
+                forgotPasswordForm.setVisible(true);
+            }
+        });
         gbc.gridy = 7;
         formPanel.add(forgotPasswordLabel, gbc);
 
@@ -245,26 +289,80 @@ public class LoginForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String email = emailField.getText();
                 String password = new String(passwordField.getPassword());
-                if (validateLogin(email, password)) {
-                    JOptionPane.showMessageDialog(LoginForm.this, "Đăng nhập thành công!");
-                } else {
-                    JOptionPane.showMessageDialog(LoginForm.this, "Đăng nhập thất bại!");
+
+                // Kiểm tra các trường không rỗng
+                if (email.isEmpty() || email.equals("Email")) {
+                    JOptionPane.showMessageDialog(LoginForm.this, "Vui lòng nhập email!");
+                    return;
                 }
+                if (password.isEmpty() || password.equals("Mật khẩu")) {
+                    JOptionPane.showMessageDialog(LoginForm.this, "Vui lòng nhập mật khẩu!");
+                    return;
+                }
+
+                // Sử dụng SwingWorker để xử lý đăng nhập
+                SwingWorker<String, Void> worker = new SwingWorker<String, Void>() {
+                    @Override
+                    protected String doInBackground() throws Exception {
+                        return validateLogin(email, password);
+                    }
+
+                    @Override
+                    protected void done() {
+                        try {
+                            String role = get();
+                            if (role != null) {
+                                // Hiển thị thông báo thành công
+                                successPanel.setVisible(true);
+                                successPanel.revalidate();
+                                successPanel.repaint();
+
+                                // Tạo Timer để chuyển hướng sau 1 giây
+                                Timer timer = new Timer(1000, new ActionListener() {
+                                    @Override
+                                    public void actionPerformed(ActionEvent evt) {
+                                        // Chuyển hướng dựa trên role
+                                        if (role.equals("user")) {
+                                            new UserInterface().setVisible(true);
+                                        } else if (role.equals("admin")) {
+                                            new AdminInterface().setVisible(true);
+                                        }
+                                        LoginForm.this.dispose(); // Đóng form đăng nhập
+                                    }
+                                });
+                                timer.setRepeats(false); // Chỉ chạy một lần
+                                timer.start();
+                            } else {
+                                JOptionPane.showMessageDialog(LoginForm.this, "Đăng nhập thất bại! Email hoặc mật khẩu không đúng.");
+                            }
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            JOptionPane.showMessageDialog(LoginForm.this, "Lỗi trong quá trình đăng nhập: " + ex.getMessage());
+                        }
+                    }
+                };
+                worker.execute();
             }
         });
     }
 
-    private boolean validateLogin(String email, String password) {
+    private String validateLogin(String email, String password) {
         try (Connection conn = TestConnection.getConnection()) {
-            String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+            if (conn == null) {
+                throw new SQLException("Không thể kết nối đến cơ sở dữ liệu!");
+            }
+            String sql = "SELECT role FROM users WHERE username = ? AND password = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, email);
             stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
-            return rs.next();
+            if (rs.next()) {
+                return rs.getString("role");
+            }
+            return null;
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            throw new RuntimeException("Lỗi đăng nhập: " + e.getMessage());
         }
     }
 
